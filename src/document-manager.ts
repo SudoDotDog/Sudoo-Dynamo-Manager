@@ -4,7 +4,7 @@
  * @description Document Manager
  */
 
-import { AWSConfigUpdateCheckFunction } from "./declare";
+import { AWSConfigUpdateCheckFunction, AWSConfigUpdateFunction } from "./declare";
 import { DynamoDocumentManagerInstance } from "./document-manager-instance";
 
 export class DynamoDocumentManager extends DynamoDocumentManagerInstance {
@@ -28,6 +28,12 @@ export class DynamoDocumentManager extends DynamoDocumentManagerInstance {
 
         this.getInstance().declareConfigUpdateCheckFunction(configUpdateCheckFunction);
     }
+
+    public static declareConfigUpdateFunction(configUpdateFunction: AWSConfigUpdateFunction): void {
+
+        this.getInstance().declareConfigUpdateFunction(configUpdateFunction);
+    }
+
 
     public static declareUpdatedFailedError(error: Error): void {
 
