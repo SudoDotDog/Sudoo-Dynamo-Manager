@@ -15,10 +15,14 @@
     "url": "https://github.com/SudoDotDog/Sudoo-Dynamo-Manager/issues"
   },
   "homepage": "https://github.com/SudoDotDog/Sudoo-Dynamo-Manager#readme",
+  "peerDependencies": {
+    "aws-sdk": "*"
+  },
   "devDependencies": {
     "@sudoo/build-utils": "^1.0.0",
     "@sudoo/license": "^1.1.0",
-    "@sudoo/triforce": "^2.8.28"
+    "@sudoo/triforce": "^2.8.28",
+    "aws-sdk": "^2.953.0"
   },
   "nyc": {
     "extension": [
