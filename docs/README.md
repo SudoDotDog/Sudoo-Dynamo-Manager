@@ -14,3 +14,24 @@ yarn add @sudoo/dynamo-manager
 # Or
 npm install @sudoo/dynamo-manager --save
 ```
+
+## Usage
+
+```ts
+import { DynamoDocumentManager } from "@sudoo/dynamo-manager";
+
+DynamoDocumentManager.declareConfigUpdateCheckFunction(() => {
+    return ifMyAWSConfigDone();
+}); // Optional
+DynamoDocumentManager.declareConfigUpdateFunction(() => {
+    return updateMyAWSConfig();
+}); // Optional
+
+await DynamoDocumentManager.put(params);
+await DynamoDocumentManager.batchWrite(params);
+await DynamoDocumentManager.updateAndGetNew(params);
+await DynamoDocumentManager.get(params);
+await DynamoDocumentManager.query(params);
+await DynamoDocumentManager.scan(params);
+await DynamoDocumentManager.continuesScan(params);
+```

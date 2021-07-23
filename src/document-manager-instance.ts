@@ -5,12 +5,13 @@
  */
 
 import * as AWS from "aws-sdk";
-import { AWSConfigUpdateCheckFunction } from "./declare";
+import { AWSConfigUpdateCheckFunction, AWSConfigUpdateFunction } from "./declare";
 
 export class DynamoDocumentManagerInstance {
 
     private _updatedFailedError?: Error;
     private _configUpdateCheckFunction?: AWSConfigUpdateCheckFunction;
+    private _configUpdateFunction?: AWSConfigUpdateFunction;
 
     private readonly _documentClient: AWS.DynamoDB.DocumentClient;
 
@@ -19,17 +20,19 @@ export class DynamoDocumentManagerInstance {
         this._documentClient = new AWS.DynamoDB.DocumentClient();
     }
 
-    public declareConfigUpdateCheckFunction(
-        configUpdateCheckFunction: AWSConfigUpdateCheckFunction,
-    ): this {
+    public declareConfigUpdateCheckFunction(configUpdateCheckFunction: AWSConfigUpdateCheckFunction): this {
 
         this._configUpdateCheckFunction = configUpdateCheckFunction;
         return this;
     }
 
-    public declareUpdatedFailedError(
-        error: Error,
-    ): this {
+    public declareConfigUpdateFunction(configUpdateFunction: AWSConfigUpdateFunction): this {
+
+        this._configUpdateFunction = configUpdateFunction;
+        return this;
+    }
+
+    public declareUpdatedFailedError(error: Error): this {
 
         this._updatedFailedError = error;
         return this;
@@ -207,10 +210,23 @@ export class DynamoDocumentManagerInstance {
 
     protected async _configUpdateCheck(): Promise<boolean> {
 
-        if (!this._configUpdateCheckFunction) {
-            return false;
+        if (typeof this._configUpdateCheckFunction === 'undefined') {
+            return true;
         }
-        return await Promise.resolve(this._configUpdateCheckFunction());
+
+        const checkResult: boolean = await Promise.resolve(this._configUpdateCheckFunction());
+        if (!checkResult) {
+
+            if (typeof this._configUpdateFunction === 'undefined') {
+                return false;
+            }
+
+            const updateResult: boolean = await Promise.resolve(this._configUpdateFunction());
+            if (!updateResult) {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected async _configUpdateEnsure(): Promise<void> {
