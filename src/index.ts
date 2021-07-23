@@ -6,4 +6,5 @@
 
 export * from "./declare";
 export * from "./document-manager";
+export * from "./document-manager-instance";
 
