@@ -38,26 +38,6 @@ export class DynamoDocumentManagerInstance {
         return this;
     }
 
-    public async put(params: AWS.DynamoDB.DocumentClient.PutItemInput): Promise<void> {
-
-        await this._configUpdateEnsure();
-
-        return await new Promise<void>((resolve: () => void, reject: (reason: any) => void) => {
-
-            this._documentClient.put(
-                params,
-                (err: any) => {
-
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                },
-            );
-        });
-    }
-
     public async batchWrite(params: AWS.DynamoDB.DocumentClient.BatchWriteItemInput): Promise<AWS.DynamoDB.DocumentClient.BatchWriteItemOutput> {
 
         await this._configUpdateEnsure();
@@ -78,18 +58,35 @@ export class DynamoDocumentManagerInstance {
         });
     }
 
-    public async updateAndGetNew(params: AWS.DynamoDB.DocumentClient.UpdateItemInput): Promise<AWS.DynamoDB.DocumentClient.UpdateItemOutput> {
+    public async batchGet(params: AWS.DynamoDB.DocumentClient.BatchGetItemInput): Promise<AWS.DynamoDB.DocumentClient.BatchGetItemOutput> {
 
         await this._configUpdateEnsure();
 
-        return await new Promise<AWS.DynamoDB.DocumentClient.UpdateItemOutput>((resolve: (data: AWS.DynamoDB.DocumentClient.UpdateItemOutput) => void, reject: (reason: any) => void) => {
+        return await new Promise<AWS.DynamoDB.DocumentClient.BatchGetItemOutput>((resolve: (data: AWS.DynamoDB.DocumentClient.BatchGetItemOutput) => void, reject: (reason: any) => void) => {
 
-            this._documentClient.update(
-                {
-                    ...params,
-                    ReturnValues: 'UPDATED_NEW',
+            this._documentClient.batchGet(
+                params,
+                (err: any, data: AWS.DynamoDB.DocumentClient.BatchGetItemOutput) => {
+
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(data);
+                    }
                 },
-                (err: any, data: AWS.DynamoDB.DocumentClient.UpdateItemOutput) => {
+            );
+        });
+    }
+
+    public async delete(params: AWS.DynamoDB.DocumentClient.DeleteItemInput): Promise<AWS.DynamoDB.DocumentClient.DeleteItemOutput> {
+
+        await this._configUpdateEnsure();
+
+        return await new Promise<AWS.DynamoDB.DocumentClient.DeleteItemOutput>((resolve: (data: AWS.DynamoDB.DocumentClient.DeleteItemOutput) => void, reject: (reason: any) => void) => {
+
+            this._documentClient.delete(
+                params,
+                (err: any, data: AWS.DynamoDB.DocumentClient.DeleteItemOutput) => {
 
                     if (err) {
                         reject(err);
@@ -121,20 +118,20 @@ export class DynamoDocumentManagerInstance {
         });
     }
 
-    public async batchGet(params: AWS.DynamoDB.DocumentClient.BatchGetItemInput): Promise<AWS.DynamoDB.DocumentClient.BatchGetItemOutput> {
+    public async put(params: AWS.DynamoDB.DocumentClient.PutItemInput): Promise<void> {
 
         await this._configUpdateEnsure();
 
-        return await new Promise<AWS.DynamoDB.DocumentClient.BatchGetItemOutput>((resolve: (data: AWS.DynamoDB.DocumentClient.BatchGetItemOutput) => void, reject: (reason: any) => void) => {
+        return await new Promise<void>((resolve: () => void, reject: (reason: any) => void) => {
 
-            this._documentClient.batchGet(
+            this._documentClient.put(
                 params,
-                (err: any, data: AWS.DynamoDB.DocumentClient.BatchGetItemOutput) => {
+                (err: any) => {
 
                     if (err) {
                         reject(err);
                     } else {
-                        resolve(data);
+                        resolve();
                     }
                 },
             );
@@ -206,6 +203,29 @@ export class DynamoDocumentManagerInstance {
             }
             exclusiveStartKey = output.LastEvaluatedKey;
         }
+    }
+
+    public async updateAndGetNew(params: AWS.DynamoDB.DocumentClient.UpdateItemInput): Promise<AWS.DynamoDB.DocumentClient.UpdateItemOutput> {
+
+        await this._configUpdateEnsure();
+
+        return await new Promise<AWS.DynamoDB.DocumentClient.UpdateItemOutput>((resolve: (data: AWS.DynamoDB.DocumentClient.UpdateItemOutput) => void, reject: (reason: any) => void) => {
+
+            this._documentClient.update(
+                {
+                    ...params,
+                    ReturnValues: 'UPDATED_NEW',
+                },
+                (err: any, data: AWS.DynamoDB.DocumentClient.UpdateItemOutput) => {
+
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(data);
+                    }
+                },
+            );
+        });
     }
 
     protected async _configUpdateCheck(): Promise<boolean> {

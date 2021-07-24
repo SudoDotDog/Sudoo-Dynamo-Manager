@@ -40,19 +40,19 @@ export class DynamoDocumentManager extends DynamoDocumentManagerInstance {
         this.getInstance().declareUpdatedFailedError(error);
     }
 
-    public static async put(params: AWS.DynamoDB.DocumentClient.PutItemInput): Promise<void> {
-
-        return this.getInstance().put(params);
-    }
-
     public static async batchWrite(params: AWS.DynamoDB.DocumentClient.BatchWriteItemInput): Promise<AWS.DynamoDB.DocumentClient.BatchWriteItemOutput> {
 
         return this.getInstance().batchWrite(params);
     }
 
-    public static async updateAndGetNew(params: AWS.DynamoDB.DocumentClient.UpdateItemInput): Promise<AWS.DynamoDB.DocumentClient.UpdateItemOutput> {
+    public static async batchGet(params: AWS.DynamoDB.DocumentClient.BatchGetItemInput): Promise<AWS.DynamoDB.DocumentClient.BatchGetItemOutput> {
 
-        return this.getInstance().updateAndGetNew(params);
+        return this.getInstance().batchGet(params);
+    }
+
+    public static async delete(params: AWS.DynamoDB.DocumentClient.DeleteItemInput): Promise<AWS.DynamoDB.DocumentClient.DeleteItemOutput> {
+
+        return this.getInstance().delete(params);
     }
 
     public static async get(params: AWS.DynamoDB.DocumentClient.GetItemInput): Promise<AWS.DynamoDB.DocumentClient.GetItemOutput> {
@@ -60,9 +60,9 @@ export class DynamoDocumentManager extends DynamoDocumentManagerInstance {
         return this.getInstance().get(params);
     }
 
-    public static async batchGet(params: AWS.DynamoDB.DocumentClient.BatchGetItemInput): Promise<AWS.DynamoDB.DocumentClient.BatchGetItemOutput> {
+    public static async put(params: AWS.DynamoDB.DocumentClient.PutItemInput): Promise<void> {
 
-        return this.getInstance().batchGet(params);
+        return this.getInstance().put(params);
     }
 
     public static async query(params: AWS.DynamoDB.DocumentClient.QueryInput): Promise<AWS.DynamoDB.DocumentClient.QueryOutput> {
@@ -78,6 +78,11 @@ export class DynamoDocumentManager extends DynamoDocumentManagerInstance {
     public static async continuesScan<T extends any>(params: AWS.DynamoDB.DocumentClient.ScanInput): Promise<T[]> {
 
         return this.getInstance().continuesScan(params);
+    }
+
+    public static async updateAndGetNew(params: AWS.DynamoDB.DocumentClient.UpdateItemInput): Promise<AWS.DynamoDB.DocumentClient.UpdateItemOutput> {
+
+        return this.getInstance().updateAndGetNew(params);
     }
 
     private constructor() {
