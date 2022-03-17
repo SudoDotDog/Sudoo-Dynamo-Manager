@@ -21,7 +21,7 @@
   "devDependencies": {
     "@sudoo/build-utils": "^1.0.0",
     "@sudoo/license": "^1.1.0",
-    "@sudoo/triforce": "^2.8.29",
+    "@sudoo/triforce": "^3.0.0",
     "aws-sdk": "^2.953.0"
   },
   "nyc": {
