@@ -158,6 +158,34 @@ export class DynamoDocumentManagerInstance {
         });
     }
 
+    public async continuesQuery<T>(params: AWS.DynamoDB.DocumentClient.QueryInput): Promise<T[]> {
+
+        await this._configUpdateEnsure();
+
+        const results: T[] = [];
+        let exclusiveStartKey: any;
+
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+
+            const output: AWS.DynamoDB.DocumentClient.QueryOutput = await this.query({
+                ...params,
+                Limit: undefined,
+                ExclusiveStartKey: exclusiveStartKey,
+            });
+            if (!output.Items) {
+                return results;
+            }
+            for (const item of output.Items) {
+                results.push(item as any);
+            }
+            if (typeof output.LastEvaluatedKey === 'undefined') {
+                return results;
+            }
+            exclusiveStartKey = output.LastEvaluatedKey;
+        }
+    }
+
     public async scan(params: AWS.DynamoDB.DocumentClient.ScanInput): Promise<AWS.DynamoDB.DocumentClient.ScanOutput> {
 
         await this._configUpdateEnsure();
@@ -178,7 +206,7 @@ export class DynamoDocumentManagerInstance {
         });
     }
 
-    public async continuesScan<T extends any>(params: AWS.DynamoDB.DocumentClient.ScanInput): Promise<T[]> {
+    public async continuesScan<T>(params: AWS.DynamoDB.DocumentClient.ScanInput): Promise<T[]> {
 
         await this._configUpdateEnsure();
 

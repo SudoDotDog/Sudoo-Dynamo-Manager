@@ -75,9 +75,14 @@ export class DynamoDocumentManager extends DynamoDocumentManagerInstance {
         return this.getInstance().scan(params);
     }
 
-    public static async continuesScan<T extends any>(params: AWS.DynamoDB.DocumentClient.ScanInput): Promise<T[]> {
+    public static async continuesScan<T>(params: AWS.DynamoDB.DocumentClient.ScanInput): Promise<T[]> {
 
         return this.getInstance().continuesScan(params);
+    }
+
+    public static async continuesQuery<T>(params: AWS.DynamoDB.DocumentClient.QueryInput): Promise<T[]> {
+
+        return this.getInstance().continuesQuery(params);
     }
 
     public static async updateAndGetNew(params: AWS.DynamoDB.DocumentClient.UpdateItemInput): Promise<AWS.DynamoDB.DocumentClient.UpdateItemOutput> {
