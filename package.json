@@ -1,6 +1,6 @@
 {
   "name": "@sudoo/dynamo-manager",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Dynamo Manager for Node",
   "directories": {
     "doc": "docs"
@@ -19,7 +19,7 @@
     "aws-sdk": "*"
   },
   "devDependencies": {
-    "@sudoo/triforce": "^3.5.1",
+    "@sudoo/triforce": "^3.6.0",
     "aws-sdk": "^2.1135.0"
   },
   "nyc": {
